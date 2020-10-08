@@ -1,27 +1,29 @@
-const express = require("express");
-const server = express();
+require('dotenv');
 
-// GET; // buscar algo
-// POST; // criar algo
-// PUT; // atualizar infos
-// DELETE; // deleta alguma coisa
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
 
-server.get("/teste", (req, res) => {
-  return res.status(200).send({ name: "Tobinha" });
-});
+const routes = require('./routes');
 
-server.put("/teste_put", (req, res) => {
-  return res.status(200).send({ name: "Tobinha PUT" });
-});
+const app = express();
 
-server.post("/teste_post", (req, res) => {
-  return res.status(200).send({ name: "Tobinha POST" });
-});
+mongoose.Promise = global.Promise;
 
-server.delete("/teste_delete", (req, res) => {
-  return res.status(200).send({ name: "Tobinha POST" });
-});
+const PORT = process.env.PORT || 3000;
+const dbConnection = `${process.env.DB_HOST}/${process.env.DB_NAME}`;
 
-// CHUPADA DIMENSIONAL REVERSA
+mongoose
+	.connect(dbConnection, { useNewUrlParser: true, useUnifiedTopology: true })
+	.then(() => console.log('connected to database'))
+	.catch((error) => console.log(`erro ao conectar ao mongo: ${error}`));
 
-server.listen(3000, () => console.log(`Serve on POST 3000`));
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(morgan('dev'));
+app.use('/api', routes);
+
+app.listen(PORT, () => console.log(`Server on PORT ${PORT}`));
