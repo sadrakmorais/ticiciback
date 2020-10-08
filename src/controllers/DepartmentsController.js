@@ -1,8 +1,8 @@
 const Yup = require('yup');
-const User = require('../models/User');
+const Department = require('../models/Department');
 const errors = require('../lib/errors');
 
-class UsersController {
+class DepartmentsController {
 	index = async (req, res) => {
 		try {
 			const query = req.query;
@@ -16,9 +16,9 @@ class UsersController {
 				}
 			}
 
-			const users = await User.find(filter).select('-password');
+			const departments = await Department.find(filter);
 
-			return res.status(200).json({ users });
+			return res.status(200).json({ departments });
 		} catch (error) {
 			console.error(error);
 
@@ -30,14 +30,14 @@ class UsersController {
 
 	show = async (req, res) => {
 		try {
-			const { userId } = req.params;
-			const user = await User.findOne({ _id: userId });
+			const { departmentId } = req.params;
+			const department = await Department.findOne({ _id: departmentId });
 
-			if (!user) {
+			if (!department) {
 				throw errors.NOT_FOUND;
 			}
 
-			return res.status(200).json({ user });
+			return res.status(200).json({ department });
 		} catch (error) {
 			console.error(error);
 
@@ -51,21 +51,14 @@ class UsersController {
 		try {
 			const payload = req.body;
 			const validationSchema = Yup.object().shape({
-				course: Yup.mixed().required('curso não informado'),
-				level: Yup.number().min(0).max(3).required('nível não informado'),
-				name: Yup.string().required('não informado'),
-				cpf: Yup.string().required('não informado'),
-				registration: Yup.string().required('não informado'),
-				isStudent: Yup.boolean().required('não informado'),
-				email: Yup.string().required('não informado'),
-				password: Yup.string().required('não informado'),
-				phone: Yup.string().required('não informado'),
+				sector: Yup.mixed().required('faculdade não informada'),
+				name: Yup.number().min(0).max(3).required('nome não informado'),
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
-			const user = await User.create(payload);
+			const department = await Department.create(payload);
 
-			return res.status(201).json({ user });
+			return res.status(201).json({ department });
 		} catch (error) {
 			console.error(error);
 
@@ -81,32 +74,25 @@ class UsersController {
 
 	update = async (req, res) => {
 		try {
-			const { userId } = req.params;
+			const { departmentId } = req.params;
 			const payload = req.body;
-			let user = await User.findOne({ _id: userId });
+			let department = await Department.findOne({ _id: departmentId });
 
-			if (!user) {
+			if (!department) {
 				throw errors.NOT_FOUND;
 			}
 
 			const validationSchema = Yup.object().shape({
-				course: Yup.mixed(),
-				level: Yup.number().min(0).max(3),
+				department: Yup.mixed(),
 				name: Yup.string(),
-				cpf: Yup.string(),
-				registration: Yup.string(),
-				isStudent: Yup.boolean(),
-				email: Yup.string(),
-				password: Yup.string(),
-				phone: Yup.string(),
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
-			await User.updateOne({ _id: userId }, { ...payload });
+			await Department.updateOne({ _id: departmentId }, { ...payload });
 
-			user = { ...user, ...payload };
+			department = { ...department, ...payload };
 
-			return res.status(201).json({ user });
+			return res.status(201).json({ department });
 		} catch (error) {
 			console.error(error);
 
@@ -122,14 +108,14 @@ class UsersController {
 
 	destroy = async (req, res) => {
 		try {
-			const { userId } = req.params;
-			const user = await User.findOne({ _id: userId });
+			const { departmentId } = req.params;
+			const department = await Department.findOne({ _id: departmentId });
 
-			if (!user) {
+			if (!department) {
 				throw errors.NOT_FOUND;
 			}
 
-			await User.deleteOne({ _id: userId });
+			await Department.deleteOne({ _id: departmentId });
 
 			return res.status(200).json({ message: 'usuário excluido' });
 		} catch (error) {
@@ -142,4 +128,4 @@ class UsersController {
 	};
 }
 
-module.exports = { UsersController };
+module.exports = { DepartmentsController };

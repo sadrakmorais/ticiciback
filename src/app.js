@@ -15,8 +15,6 @@ mongoose.Promise = global.Promise;
 const PORT = process.env.PORT || 3000;
 const dbConnection = `mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`;
 
-console.log(dbConnection);
-
 mongoose
 	.connect(dbConnection, { useNewUrlParser: true, useUnifiedTopology: true })
 	.then(() => console.log('connected to database'))
