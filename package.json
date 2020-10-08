@@ -10,9 +10,10 @@
     "express": "^4.17.1",
     "mongoose": "^5.10.8",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.4"
+    "nodemon": "^2.0.4",
+    "yup": "^0.29.3"
   },
   "scripts": {
-    "bosta": "nodemon src/app.js"
+    "start": "nodemon src/app.js"
   }
 }
