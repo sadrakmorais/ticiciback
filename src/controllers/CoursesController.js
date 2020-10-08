@@ -52,7 +52,7 @@ class CoursesController {
 			const payload = req.body;
 			const validationSchema = Yup.object().shape({
 				department: Yup.mixed().required('departamento não informado'),
-				name: Yup.number().min(0).max(3).required('nome não informado'),
+				name: Yup.string().required('nome não informado'),
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });

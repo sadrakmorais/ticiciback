@@ -1,8 +1,8 @@
 const Yup = require('yup');
-const Department = require('../models/Department');
+const Sector = require('../models/Sector');
 const errors = require('../lib/errors');
 
-class DepartmentsController {
+class SectorsController {
 	index = async (req, res) => {
 		try {
 			const query = req.query;
@@ -16,9 +16,9 @@ class DepartmentsController {
 				}
 			}
 
-			const departments = await Department.find(filter);
+			const sectors = await Sector.find(filter);
 
-			return res.status(200).json({ departments });
+			return res.status(200).json({ sectors });
 		} catch (error) {
 			console.error(error);
 
@@ -30,14 +30,14 @@ class DepartmentsController {
 
 	show = async (req, res) => {
 		try {
-			const { departmentId } = req.params;
-			const department = await Department.findOne({ _id: departmentId });
+			const { sectorId } = req.params;
+			const sector = await Sector.findOne({ _id: sectorId });
 
-			if (!department) {
+			if (!sector) {
 				throw errors.NOT_FOUND;
 			}
 
-			return res.status(200).json({ department });
+			return res.status(200).json({ sector });
 		} catch (error) {
 			console.error(error);
 
@@ -51,14 +51,13 @@ class DepartmentsController {
 		try {
 			const payload = req.body;
 			const validationSchema = Yup.object().shape({
-				sector: Yup.mixed().required('faculdade não informada'),
 				name: Yup.string().required('nome não informado'),
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
-			const department = await Department.create(payload);
+			const sector = await Sector.create(payload);
 
-			return res.status(201).json({ department });
+			return res.status(201).json({ sector });
 		} catch (error) {
 			console.error(error);
 
@@ -74,25 +73,24 @@ class DepartmentsController {
 
 	update = async (req, res) => {
 		try {
-			const { departmentId } = req.params;
+			const { sectorId } = req.params;
 			const payload = req.body;
-			let department = await Department.findOne({ _id: departmentId });
+			let sector = await Sector.findOne({ _id: sectorId });
 
-			if (!department) {
+			if (!sector) {
 				throw errors.NOT_FOUND;
 			}
 
 			const validationSchema = Yup.object().shape({
-				department: Yup.mixed(),
-				name: Yup.string(),
+				name: Yup.string().required('nome não informado'),
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
-			await Department.updateOne({ _id: departmentId }, { ...payload });
+			await Sector.updateOne({ _id: sectorId }, { ...payload });
 
-			department = { ...department, ...payload };
+			sector = { ...sector, ...payload };
 
-			return res.status(201).json({ department });
+			return res.status(201).json({ sector });
 		} catch (error) {
 			console.error(error);
 
@@ -108,14 +106,14 @@ class DepartmentsController {
 
 	destroy = async (req, res) => {
 		try {
-			const { departmentId } = req.params;
-			const department = await Department.findOne({ _id: departmentId });
+			const { sectorId } = req.params;
+			const sector = await Sector.findOne({ _id: sectorId });
 
-			if (!department) {
+			if (!sector) {
 				throw errors.NOT_FOUND;
 			}
 
-			await Department.deleteOne({ _id: departmentId });
+			await Sector.deleteOne({ _id: sectorId });
 
 			return res.status(200).json({ message: 'usuário excluido' });
 		} catch (error) {
@@ -128,4 +126,4 @@ class DepartmentsController {
 	};
 }
 
-module.exports = { DepartmentsController };
+module.exports = { SectorsController };
