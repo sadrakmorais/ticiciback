@@ -88,7 +88,7 @@ class SectorsController {
 			await validationSchema.validate(payload, { abortEarly: false });
 			await Sector.updateOne({ _id: sectorId }, { ...payload });
 
-			sector = { ...sector, ...payload };
+			sector = { ...sector._doc, ...payload };
 
 			return res.status(201).json({ sector });
 		} catch (error) {

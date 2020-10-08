@@ -104,7 +104,7 @@ class UsersController {
 			await validationSchema.validate(payload, { abortEarly: false });
 			await User.updateOne({ _id: userId }, { ...payload });
 
-			user = { ...user, ...payload };
+			user = { ...user._doc, ...payload };
 
 			return res.status(201).json({ user });
 		} catch (error) {

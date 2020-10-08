@@ -90,7 +90,7 @@ class CoursesController {
 			await validationSchema.validate(payload, { abortEarly: false });
 			await Course.updateOne({ _id: courseId }, { ...payload });
 
-			course = { ...course, ...payload };
+			course = { ...course._doc, ...payload };
 
 			return res.status(201).json({ course });
 		} catch (error) {

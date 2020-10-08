@@ -90,7 +90,7 @@ class DepartmentsController {
 			await validationSchema.validate(payload, { abortEarly: false });
 			await Department.updateOne({ _id: departmentId }, { ...payload });
 
-			department = { ...department, ...payload };
+			department = { ...department._doc, ...payload };
 
 			return res.status(201).json({ department });
 		} catch (error) {
