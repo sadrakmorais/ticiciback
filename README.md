@@ -1,5 +1,15 @@
 # DOCS
 
+#### PS: Todos os métodos INDEX aceitam query-params como filtros;
+
+```
+    - Ex de request buscando todos os usuários de um curso específico:
+        - /users?course=923oivojdf98u934tb90ubf9gb8u
+
+    - Ex de request buscando todos os eventos de um departamento e que não foram aceitos ainda:
+        - /events?department=98dv9fd934mntovsoidi&isAccepted=false
+```
+
 ## Autenticação:
 
 ```
@@ -28,7 +38,7 @@
         - 500: API encontrou uma situação com a qual não sabe lidar;
 ```
 
-## Users:
+## Usuários:
 
 ```
 GET /users : Retorna todos os usuários
