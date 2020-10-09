@@ -19,11 +19,11 @@ class AuthController {
 
 			bcrypt.compare(password, user.password, (err, passwordsMatch) => {
 				if (err || !passwordsMatch) {
-					return res.status(403).json({ error: 'wrong password' });
+					throw errors.UNAUTHORIZED();
 				}
 
-                const auth = jwt.sign({ user }, process.env.SECRET);
-                
+				const auth = jwt.sign({ user }, process.env.SECRET);
+
 				return res.status(200).json({ user, auth });
 			});
 		} catch (error) {

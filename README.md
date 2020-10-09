@@ -9,6 +9,25 @@
     Caso o token não seja fornecido, ou seja inválido, a API retornará o status code 401.
 ```
 
+```
+    GET /auth : Informe se o usuário está logado ou não
+
+    Status de resposta:
+        - 200: Usuário logado;
+        - 401: Usuário não está logado;
+        - 500: API encontrou uma situação com a qual não sabe lidar;
+```
+
+```
+    POST /auth : Retorna token de autenticação
+
+    Status de resposta:
+        - 200: Login feito com sucesso;
+        - 404: Usuário não encontrado;
+        - 401: Senha incorreta;
+        - 500: API encontrou uma situação com a qual não sabe lidar;
+```
+
 ## Users:
 
 ```
