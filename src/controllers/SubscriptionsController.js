@@ -4,7 +4,7 @@ const Subscription = require('../models/Subscription');
 const Event = require('../models/Event');
 const User = require('../models/User');
 
-const isBefore = require('date-fns/is_before');
+const isAfter = require('date-fns/isAfter');
 const errors = require('../lib/errors');
 
 class SubscriptionsController {
@@ -38,7 +38,7 @@ class SubscriptionsController {
 		try {
 			const { subscriptionId } = req.params;
 			const subscription = await Subscription.findOne({ _id: subscriptionId }).populate({
-				path: 'user',
+				path: 'user event',
 				populate: {
 					path: 'course',
 					populate: {
@@ -81,13 +81,19 @@ class SubscriptionsController {
 
 			const [userExists, eventExists] = await Promise.all([
 				User.findOne({ _id: user }),
-				Event.findOne({ _id: event }),
+				Event.findOne({ _id: event, isFinished: false }),
 			]);
 
 			if (!userExists || !eventExists) {
 				throw errors.NOT_FOUND(
 					`${userExists ? '' : 'usuário'}, ${eventExists ? '' : 'evento'}`
 				);
+			}
+
+			const today = new Date();
+
+			if (isAfter(today, event.period.start)) {
+				throw errors.BAD_REQUEST('evento já iniciado');
 			}
 
 			await validationSchema.validate(payload, { abortEarly: false });
@@ -119,7 +125,7 @@ class SubscriptionsController {
 			const today = new Date();
 			const event = await Event.findOne({ _id: subscription.event });
 
-			if (!isBefore(today, event.period.start)) {
+			if (isAfter(today, event.period.start)) {
 				throw errors.BAD_REQUEST(
 					'não é possível excluir essa inscrição pois o evento já foi iniciado'
 				);

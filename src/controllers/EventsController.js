@@ -1,5 +1,5 @@
 const Yup = require('yup');
-const isWithinRange = require('date-fns/is_within_range');
+const isWithinInterval = require('date-fns/isWithinInterval');
 
 const Event = require('../models/Event');
 const errors = require('../lib/errors');
@@ -72,7 +72,7 @@ class EventsController {
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
-			const event = await Event.create(payload);
+			const event = await Event.create({ ...payload, isFinished: false, isAccepted: false });
 
 			return res.status(201).json({ event });
 		} catch (error) {
@@ -129,6 +129,40 @@ class EventsController {
 		}
 	};
 
+	modify = async (req, res) => {
+		try {
+			const { eventId } = req.params;
+			const payload = req.body;
+			let event = await Event.findOne({ _id: eventId });
+
+			if (!event) {
+				throw errors.NOT_FOUND('evento');
+			}
+
+			const validationSchema = Yup.object().shape({
+				isFinished: Yup.boolean().nullable(),
+				isAccepted: Yup.boolean().nullable(),
+			});
+
+			await validationSchema.validate(payload, { abortEarly: false });
+			await Event.updateOne({ _id: eventId }, { ...payload });
+
+			event = { ...event._doc, ...payload };
+
+			return res.status(201).json({ event });
+		} catch (error) {
+			console.error(error);
+
+			if (error instanceof Yup.ValidationError) {
+				return res.status(errors.BAD_REQUEST().code).json({ error: error.inner });
+			}
+
+			return res.status(error.code || 500).json({
+				message: error.message || errors.INTERNAL_SERVER_ERROR,
+			});
+		}
+	};
+
 	destroy = async (req, res) => {
 		try {
 			const { eventId } = req.params;
@@ -139,7 +173,10 @@ class EventsController {
 			}
 
 			const today = new Date();
-			const isEventOccurring = isWithinRange(today, event.period.start, event.period.end);
+			const isEventOccurring = isWithinInterval(today, {
+				start: event.period.start,
+				end: event.period.end,
+			});
 
 			if (isEventOccurring) {
 				throw errors.BAD_REQUEST(

@@ -25,6 +25,11 @@ const EventSchema = new Schema({
 		required: true,
 		refault: false,
 	},
+	isAccepted: {
+		type: Boolean,
+		required: true,
+		refault: false,
+	},
 	description: {
 		type: String,
 		required: true,
