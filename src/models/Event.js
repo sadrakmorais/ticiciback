@@ -20,6 +20,11 @@ const EventSchema = new Schema({
 			required: true,
 		},
 	},
+	isFinished: {
+		type: Boolean,
+		required: true,
+		refault: false,
+	},
 	description: {
 		type: String,
 		required: true,
@@ -27,6 +32,7 @@ const EventSchema = new Schema({
 	vacancies: {
 		type: Number,
 		required: true,
+		default: 0,
 	},
 	location: {
 		type: String,

@@ -81,11 +81,11 @@ class UsersController {
 			}
 
 			const validationSchema = Yup.object().shape({
-				course: Yup.mixed().required('curso não informado'),
+				course: Yup.mixed().nullable(),
 				level: Yup.number().min(0).max(3).required('nível não informado'),
 				name: Yup.string().required('não informado'),
 				cpf: Yup.string().required('não informado'),
-				registration: Yup.string(),
+				registration: Yup.string().nullable(),
 				isStudent: Yup.boolean().required('não informado'),
 				email: Yup.string().required('não informado'),
 				password: Yup.string().required('não informado'),
@@ -120,11 +120,11 @@ class UsersController {
 			}
 
 			const validationSchema = Yup.object().shape({
-				course: Yup.mixed(),
+				course: Yup.mixed().nullable(),
 				level: Yup.number().min(0).max(3),
 				name: Yup.string(),
 				cpf: Yup.string(),
-				registration: Yup.string(),
+				registration: Yup.string().nullable(),
 				isStudent: Yup.boolean(),
 				email: Yup.string(),
 				password: Yup.string(),
