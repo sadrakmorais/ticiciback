@@ -1,14 +1,15 @@
 const router = require('express').Router();
 
+const { isAuthenticated } = require('../../middlewares/isAuthenticated');
 const { EventsController } = require('../../controllers/EventsController');
 
 const eventsController = new EventsController();
 
-router.get('/', (req, res) => eventsController.index(req, res));
-router.get('/:eventId', (req, res) => eventsController.show(req, res));
-router.post('/', (req, res) => eventsController.store(req, res));
-router.put('/:eventId', (req, res) => eventsController.update(req, res));
-router.patch('/:eventId', (req, res) => eventsController.modify(req, res));
-router.delete('/:eventId', (req, res) => eventsController.destroy(req, res));
+router.get('/', isAuthenticated, eventsController.index);
+router.get('/:eventId', isAuthenticated, eventsController.show);
+router.post('/', isAuthenticated, eventsController.store);
+router.put('/:eventId', isAuthenticated, eventsController.update);
+router.patch('/:eventId', isAuthenticated, eventsController.modify);
+router.delete('/:eventId', isAuthenticated, eventsController.destroy);
 
 module.exports = router;
