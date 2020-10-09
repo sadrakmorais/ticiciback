@@ -18,10 +18,7 @@ const Userchema = new Schema({
 		type: String,
 		required: true,
 	},
-	registration: {
-		type: String,
-		required: true,
-	},
+	registration: String,
 	isStudent: {
 		type: Boolean,
 		required: true,

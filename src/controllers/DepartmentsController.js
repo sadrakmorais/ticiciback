@@ -16,13 +16,13 @@ class DepartmentsController {
 				}
 			}
 
-			const departments = await Department.find(filter);
+			const departments = await Department.find(filter).populate('sector');
 
 			return res.status(200).json({ departments });
 		} catch (error) {
 			console.error(error);
 
-			return res.status(erro.code || 500).json({
+			return res.status(error.code || 500).json({
 				message: error.message || errors.INTERNAL_SERVER_ERROR,
 			});
 		}
@@ -31,17 +31,17 @@ class DepartmentsController {
 	show = async (req, res) => {
 		try {
 			const { departmentId } = req.params;
-			const department = await Department.findOne({ _id: departmentId });
+			const department = await Department.findOne({ _id: departmentId }).populate('sector');
 
 			if (!department) {
-				throw errors.NOT_FOUND;
+				throw errors.NOT_FOUND('departamento');
 			}
 
 			return res.status(200).json({ department });
 		} catch (error) {
 			console.error(error);
 
-			return res.status(erro.code || 500).json({
+			return res.status(error.code || 500).json({
 				message: error.message || errors.INTERNAL_SERVER_ERROR,
 			});
 		}
@@ -50,6 +50,12 @@ class DepartmentsController {
 	store = async (req, res) => {
 		try {
 			const payload = req.body;
+			const isNameInUse = await Department.findOne({ name: payload.name });
+
+			if (isNameInUse) {
+				throw errors.CONFLICT('nome em uso');
+			}
+
 			const validationSchema = Yup.object().shape({
 				sector: Yup.mixed().required('faculdade não informada'),
 				name: Yup.string().required('nome não informado'),
@@ -63,7 +69,7 @@ class DepartmentsController {
 			console.error(error);
 
 			if (error instanceof Yup.ValidationError) {
-				return res.status(errors.BAD_REQUEST).json({ error: error.inner });
+				return res.status(errors.BAD_REQUEST().code).json({ error: error.inner });
 			}
 
 			return res.status(error.code || 500).json({
@@ -79,7 +85,13 @@ class DepartmentsController {
 			let department = await Department.findOne({ _id: departmentId });
 
 			if (!department) {
-				throw errors.NOT_FOUND;
+				throw errors.NOT_FOUND('departamento');
+			}
+
+			const isNameInUse = await Department.findOne({ name: payload.name });
+
+			if (isNameInUse) {
+				throw errors.CONFLICT('nome em uso');
 			}
 
 			const validationSchema = Yup.object().shape({
@@ -97,10 +109,10 @@ class DepartmentsController {
 			console.error(error);
 
 			if (error instanceof Yup.ValidationError) {
-				return res.status(errors.BAD_REQUEST).json({ error: error.inner });
+				return res.status(errors.BAD_REQUEST().code).json({ error: error.inner });
 			}
 
-			return res.status(erro.code || 500).json({
+			return res.status(error.code || 500).json({
 				message: error.message || errors.INTERNAL_SERVER_ERROR,
 			});
 		}
@@ -112,16 +124,16 @@ class DepartmentsController {
 			const department = await Department.findOne({ _id: departmentId });
 
 			if (!department) {
-				throw errors.NOT_FOUND;
+				throw errors.NOT_FOUND('departamento');
 			}
 
 			await Department.deleteOne({ _id: departmentId });
 
-			return res.status(200).json({ message: 'usuário excluido' });
+			return res.status(200).json({ message: 'departamento excluído' });
 		} catch (error) {
 			console.error(error);
 
-			return res.status(erro.code || 500).json({
+			return res.status(error.code || 500).json({
 				message: error.message || errors.INTERNAL_SERVER_ERROR,
 			});
 		}
