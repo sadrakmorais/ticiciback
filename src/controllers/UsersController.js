@@ -120,7 +120,7 @@ class UsersController {
 	update = async (req, res) => {
 		try {
 			const { userId } = req.params;
-			const payload = req.body;
+			const { password, ...payload } = req.body;
 			let user = await User.findOne({ _id: userId });
 
 			if (!user) {
@@ -135,7 +135,6 @@ class UsersController {
 				registration: Yup.string().nullable(),
 				isStudent: Yup.boolean(),
 				email: Yup.string(),
-				password: Yup.string(),
 				phone: Yup.string(),
 			});
 
