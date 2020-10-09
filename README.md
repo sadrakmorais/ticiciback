@@ -1,5 +1,14 @@
 # DOCS
 
+## Autenticação:
+
+```
+    A autenticação na API é feita com base em BearerJWT.
+    O token de autenticação deve ser informado no campo "authentication" nos headers, com o prefixo "Bearer".
+
+    Caso o token não seja fornecido, ou seja inválido, a API retornará o status code 401.
+```
+
 ## Users:
 
 ```

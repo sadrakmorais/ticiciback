@@ -8,7 +8,7 @@ const usersController = new UsersController();
 router.get('/', isAuthenticated, usersController.index);
 router.get('/:userId', isAuthenticated, usersController.show);
 router.post('/', usersController.store);
-router.put('/:userId', isAuthenticated, usersController);
-router.delete('/:userId', isAuthenticated, usersController);
+router.put('/:userId', isAuthenticated, usersController.update);
+router.delete('/:userId', isAuthenticated, usersController.destroy);
 
 module.exports = router;

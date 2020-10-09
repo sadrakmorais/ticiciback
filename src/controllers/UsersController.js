@@ -1,7 +1,10 @@
 const Yup = require('yup');
+
 const User = require('../models/User');
-const errors = require('../lib/errors');
 const Course = require('../models/Course');
+
+const errors = require('../lib/errors');
+const bcrypt = require('bcrypt');
 
 class UsersController {
 	index = async (req, res) => {
@@ -66,7 +69,7 @@ class UsersController {
 
 	store = async (req, res) => {
 		try {
-			const payload = req.body;
+			let payload = req.body;
 			let user = await User.findOne({ cpf: payload.cpf, course: payload.course });
 			const userExists = user ? true : false;
 
@@ -93,7 +96,12 @@ class UsersController {
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
-			user = await User.create(payload);
+
+			let { password } = payload;
+			const salt = await bcrypt.genSalt(10);
+
+			password = await bcrypt.hash(password, salt);
+			user = await User.create({ ...payload, password });
 
 			return res.status(201).json({ user });
 		} catch (error) {
