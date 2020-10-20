@@ -67,7 +67,7 @@ class SubscriptionsController {
 	store = async (req, res) => {
 		try {
 			const payload = req.body;
-			const { user, event } = payload;
+			let { user, event } = payload;
 			const registered = await Subscription.findOne({ user, event });
 
 			if (registered) {
@@ -92,7 +92,7 @@ class SubscriptionsController {
 
 			const today = new Date();
 
-			if (isAfter(today, event.period.start)) {
+			if (isAfter(today, eventExists.period.start)) {
 				throw errors.BAD_REQUEST('evento já iniciado');
 			}
 
