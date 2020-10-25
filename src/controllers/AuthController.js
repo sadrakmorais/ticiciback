@@ -19,7 +19,7 @@ class AuthController {
 
 			bcrypt.compare(password, user.password, (err, passwordsMatch) => {
 				if (err || !passwordsMatch) {
-					throw errors.UNAUTHORIZED();
+					return res.status(401).json({ message: 'senha incorreta' });
 				}
 
 				const auth = jwt.sign({ user }, process.env.SECRET);
