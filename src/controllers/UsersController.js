@@ -77,14 +77,15 @@ class UsersController {
 				throw errors.CONFLICT('já existe um usuário com esse CPF nesse curso');
 			}
 
-			const courseExists = await Course.findOne({ _id: payload.course });
+			if (payload.course) {
+				const courseExists = await Course.findOne({ _id: payload.course });
 
-			if (!courseExists) {
-				throw errors.NOT_FOUND('curso');
+				if (!courseExists) {
+					throw errors.NOT_FOUND('curso');
+				}
 			}
 
 			const validationSchema = Yup.object().shape({
-				course: Yup.mixed().nullable(),
 				level: Yup.number().min(0).max(3).required('nível não informado'),
 				name: Yup.string().required('não informado'),
 				cpf: Yup.string().required('não informado'),
