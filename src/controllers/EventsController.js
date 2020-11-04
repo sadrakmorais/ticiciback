@@ -68,7 +68,8 @@ class EventsController {
 				description: Yup.string().required('descrição não informada'),
 				vacancies: Yup.number().min(0),
 				location: Yup.string().required('local não informado'),
-				observations: Yup.string().nullable(),
+                observations: Yup.string().nullable(),
+                photo: Yup.string().nullable(),
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
@@ -107,7 +108,8 @@ class EventsController {
 				description: Yup.string().required('descrição não informada'),
 				vacancies: Yup.number().min(0),
 				location: Yup.string().required('local não informado'),
-				observations: Yup.string().nullable(),
+                observations: Yup.string().nullable(),
+                photo: Yup.string().nullable(),
 			});
 
 			await validationSchema.validate(payload, { abortEarly: false });
