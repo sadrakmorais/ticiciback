@@ -9,7 +9,7 @@ const EventSchema = new Schema({
 	name: {
 		type: String,
 		required: true,
-	},
+    },
 	period: {
 		start: {
 			type: Date,
@@ -43,7 +43,10 @@ const EventSchema = new Schema({
 		type: String,
 		required: true,
 	},
-	observations: String,
+    observations: String,
+    photo: String,
+
+
 });
 
 module.exports = mongoose.model('events', EventSchema);

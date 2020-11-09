@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 
 const isAuthenticated = (req, res, next) => {
 	try {
+		console.log(req.headers)
 		let { authorization } = req.headers;
 
 		if (!authorization) {
