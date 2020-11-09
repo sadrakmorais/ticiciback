@@ -12,7 +12,11 @@ class SubscriptionsController {
 		try {
 			const { event } = req.headers;
 			const query = req.query;
-			let filter = { event };
+			const filter = {};
+
+			if (event) {
+				filter['event'] = event;
+			}
 
 			if (Object.keys(query).length) {
 				for (const key in query) {
