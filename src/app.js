@@ -12,8 +12,7 @@ const app = express();
 
 mongoose.Promise = global.Promise;
 
-const PORT = process.env.PORT || 3000;
-const dbConnection = `mongodb://${process.env.DB_HOST}/${process.env.DB_NAME}`;
+const dbConnection = process.env.MONGO_URL;
 
 mongoose
 	.connect(dbConnection, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -26,4 +25,4 @@ app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use('/api', routes);
 
-app.listen(process.env.PORT||3000);
+app.listen(process.env.PORT || 3000);
